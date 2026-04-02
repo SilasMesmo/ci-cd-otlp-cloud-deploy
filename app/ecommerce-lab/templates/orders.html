@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}DevShop - Pedidos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Histórico de Pedidos</h2>
+</div>
+
+<div class="glass-panel">
+    <div id="orders-container">
+        <div style="text-align: center; color: var(--text-secondary);">Carregando pedidos...</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const orders = await api.getOrders();
+        const container = document.getElementById('orders-container');
+        
+        if (orders.length === 0) {
+            container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 2rem;">Você ainda não realizou nenhum pedido.</p>';
+            return;
+        }
+
+        let html = '';
+        orders.forEach(order => {
+            html += `
+                <div style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+                        <div>
+                            <div style="font-weight: 800; font-size: 1.35rem; color: var(--text-primary);">Pedido #${order.id}</div>
+                            <div style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.25rem;">Para: ${order.customer_name} (${order.customer_email})</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary-color)">$ ${order.total_amount.toFixed(2)}</div>
+                            <div class="env-badge" style="display: inline-flex; margin-top: 0.75rem; background: var(--success); color: white; border: none;">${order.status.toUpperCase()}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <table class="table" style="margin-top: 0; background: rgba(0,0,0,0.2); border-radius: var(--radius); overflow: hidden;">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Preço</th>
+                                    <th>Qtd</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+            
+            order.items.forEach(item => {
+                html += `
+                    <tr>
+                        <td style="font-weight: 500;">${item.product.name}</td>
+                        <td>$ ${item.price_at_time.toFixed(2)}</td>
+                        <td>x ${item.quantity}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+        
+    } catch (e) {
+        document.getElementById('orders-container').innerHTML = '<p style="color:red">Erro ao carregar pedidos.</p>';
+    }
+});
+</script>
+{% endblock %}

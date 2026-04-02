@@ -1,0 +1,21 @@
+apiVersion: skaffold/v3
+kind: Config
+metadata:
+  name: skaff-ecommerce
+
+profiles:
+  - name: stag
+    manifests:
+      kustomize:
+        paths:
+          - overlays/stag
+    deploy:
+      kubectl: {}
+
+  - name: prod
+    manifests:
+      kustomize:
+        paths:
+          - overlays/prod
+    deploy:
+      kubectl: {}

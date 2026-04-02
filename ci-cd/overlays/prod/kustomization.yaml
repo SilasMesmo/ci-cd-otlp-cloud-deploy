@@ -1,0 +1,13 @@
+resources:
+ - ../../base
+
+namePrefix: prod-
+
+patches:
+  - patch: |-
+     apiVersion: apps/v1
+     kind: Deployment
+     metadata:
+       name: app-ecomm
+     spec:
+        replicas: 5

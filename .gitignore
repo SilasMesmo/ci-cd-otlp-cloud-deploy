@@ -1,0 +1,51 @@
+# Banco de dados (Dados sensíveis e arquivos muito pesados)
+*.db
+*.sqlite
+*.sqlite3
+ecommerce.db
+ecommerce-lab/ecommerce.db
+
+# Ambientes virtuais (Arquivos gerados automaticamente, muito pesados)
+.env
+.venv
+env/
+venv/
+ENV/
+ecommerce-lab/venv/
+
+# Arquivos de cache do Python (Código compilado não precisa ser versionado)
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Arquivos de configuração de IDEs e editores (Específicos da máquina do desenvolvedor)
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Builds e empacotamento
+build/
+dist/
+*.egg-info/
+
+# Dependências extras do python
+pip-log.txt
+
+# TERRAFORM
+
+.terraform
+.terraform.lock.hcl
+terraform.tfstate
+.terraform.tfstate.lock.info
+terraform.tfvars
+terraform.tfstate.backup

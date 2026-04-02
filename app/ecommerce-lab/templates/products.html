@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}DevShop - Products{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Catálogo de Produtos</h2>
+</div>
+
+<div class="product-grid" id="products-container">
+    <div style="text-align: center; width: 100%; color: var(--text-secondary);">Carregando produtos...</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const products = await api.getProducts();
+        const container = document.getElementById('products-container');
+        container.innerHTML = '';
+        
+        if (products.length === 0) {
+            container.innerHTML = '<p>Nenhum produto encontrado.</p>';
+            return;
+        }
+
+        products.forEach(p => {
+            container.innerHTML += `
+                <div class="product-card">
+                    <img src="${p.image_url}" alt="${p.name}" class="product-img">
+                    <div class="product-info">
+                        <div class="product-title">${p.name}</div>
+                        <div class="product-desc">${p.description}</div>
+                        <div class="product-price">$ ${p.price.toFixed(2)}</div>
+                        <div class="product-footer">
+                            <a href="/product/${p.id}" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Ver Detalhes</a>
+                            <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="handleAddToCart(${p.id})">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    } catch (e) {
+        document.getElementById('products-container').innerHTML = '<p style="color:red">Erro ao carregar produtos.</p>';
+    }
+});
+</script>
+{% endblock %}

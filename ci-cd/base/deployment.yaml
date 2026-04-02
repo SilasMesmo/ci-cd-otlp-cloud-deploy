@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-ecomm
+  labels:
+    app: app-ecomm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-ecomm
+  template:
+    metadata:
+      labels:
+        app: app-ecomm
+    spec:
+      containers:
+      - name: app-ecomm-container
+        image: app-ecomm
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+        readinessProbe: # IMPORTANTE: Isso vai ler o erro 500
+          httpGet:
+            path: /health
+            port: 8080 # ou a porta que seu app usa
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      serviceAccountName: ksa-http-rest

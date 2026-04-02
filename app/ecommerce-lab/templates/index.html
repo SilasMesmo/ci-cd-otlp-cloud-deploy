@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}DevShop - Home{% endblock %}
+
+{% block content %}
+<div class="glass-panel hero-panel" style="text-align: center; padding: 6rem 2rem; background: linear-gradient(to bottom right, var(--surface-color), rgba(226, 232, 240, 0.4)); border-top: 4px solid var(--primary-color);">
+    <h1 style="font-size: 3.5rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--text-primary); letter-spacing: -1px;">
+        Engineering Your <span style="color: var(--primary-color)">Perfect Workflow</span>
+    </h1>
+    <p style="font-size: 1.25rem; color: var(--text-secondary); max-width: 650px; margin: 0 auto 2.5rem; line-height: 1.7;">
+        Equipamentos de alta performance para profissionais de tecnologia. 
+        Teclados mecânicos premium, áudio imersivo e tudo o que você precisa para entrar em estado de <em>flow</em>.
+    </p>
+    <a href="/products" class="btn" style="font-size: 1.15rem; padding: 1.2rem 3rem; text-transform: uppercase; letter-spacing: 0.5px; border-radius: 50px;">
+        Explorar Catálogo
+    </a>
+</div>
+
+<div style="margin-top: 4rem; text-align: center;">
+    <p style="color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem;">Confiança dos melhores desenvolvedores em:</p>
+    <div style="display: flex; justify-content: center; gap: 3rem; opacity: 0.5; filter: grayscale(100%); flex-wrap: wrap;">
+        <!-- Placeholder logos for enterprise feel -->
+        <h3 style="font-family: monospace; font-size: 1.5rem;">ACME Corp</h3>
+        <h3 style="font-family: monospace; font-size: 1.5rem;">GlobalTech</h3>
+        <h3 style="font-family: monospace; font-size: 1.5rem;">Innovate IT</h3>
+    </div>
+</div>
+{% endblock %}

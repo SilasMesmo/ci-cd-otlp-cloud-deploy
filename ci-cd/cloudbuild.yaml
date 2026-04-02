@@ -1,0 +1,34 @@
+## CI
+steps:
+
+# 1. Build e Push
+   - id: build and push
+     name: gcr.io/cloud-builders/docker
+     entrypoint: /bin/bash
+     dir: 'app/ecommerce-lab'
+     args:
+     - -c
+     - |
+       docker build -t us-central1-docker.pkg.dev/${PROJECT_ID}/$_REPO_NAME/$_IMAGE_NAME:$SHORT_SHA .
+       docker push us-central1-docker.pkg.dev/${PROJECT_ID}/$_REPO_NAME/$_IMAGE_NAME:$SHORT_SHA
+
+   - id: passe para o cloud deploy 
+     name: gcr.io/cloud-builders/gcloud
+     entrypoint: /bin/bash
+     dir: 'ci-cd'
+     args:
+     - -c
+     - |
+      IMAGE_PATH=us-central1-docker.pkg.dev/${PROJECT_ID}/$_REPO_NAME/$_IMAGE_NAME:$SHORT_SHA
+      
+       gcloud deploy releases create release-$SHORT_SHA \
+       --delivery-pipeline=pipeline-app \
+       --region=us-central1 \
+       --images=app-ecomm=$${IMAGE_PATH}
+
+substitutions:
+  _REPO_NAME: "injection cloudbuild via terraform"
+  _IMAGE_NAME: "injection cloudbuild via terraform"
+
+options:
+  logging: CLOUD_LOGGING_ONLY

@@ -1,0 +1,37 @@
+#cloud-config
+write_files:
+  - path: /etc/otel-config.yaml
+    permissions: '0644'
+    content: |
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: "0.0.0.0:4317"
+            http:
+              endpoint: "0.0.0.0:4318"
+      processors:
+        batch:
+        resourcedetection:
+          detectors: [gcp]
+      exporters:
+        googlecloud:
+          project: "workload-poc-20230"
+      service:
+        pipelines:
+          traces:
+            receivers: [otlp]
+            processors: [batch, resourcedetection]
+            exporters: [googlecloud]
+
+runcmd:
+  - docker run -d --name otel-collector --network host -v /etc/otel-config.yaml:/etc/otelcol-contrib/config.yaml otel/opentelemetry-collector-contrib:latest
+  - |  
+      # Criar diretório de config em um local com permissão de escrita
+      mkdir -p /var/lib/google/docker
+      export DOCKER_CONFIG=/var/lib/google/docker
+
+      docker-credential-gcr configure-docker --registries=us-central1-docker.pkg.dev
+
+      DOCKER_CONFIG=/var/lib/google/docker docker pull us-central1-docker.pkg.dev/workload-poc-20230/ecomm-repo-trace/trace-ecomm:v2
+      docker run -d --name ecomm-app --network host us-central1-docker.pkg.dev/workload-poc-20230/ecomm-repo-trace/trace-ecomm:v2

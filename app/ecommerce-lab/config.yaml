@@ -1,0 +1,23 @@
+receivers:
+  otlp:
+    protocols:
+      grpc: 
+        endpoint: "0.0.0.0:4317" # Por padrão o OTPL sabe a Porta 4317
+      http:
+        endpoint: "0.0.0.0:4318" # Por padrão o OTPL sabe a Porta 4318
+
+processors:
+  batch: # Agrupa os dados para não sobrecarregar a rede
+  resourcedetection:
+    detectors: [gcp]
+
+exporters:
+  googlecloud:
+    project: "workload-poc-20230"
+
+service:
+  pipelines:
+    traces: # fluxo de rastreio
+      receivers: [otlp]
+      processors: [batch, resourcedetection]
+      exporters: [googlecloud]

@@ -1,0 +1,14 @@
+token do github "${secret_git}" precisa do scope "repo" e "read:user"
+é necessário estar com a API GKE HUB habilitada para poder criar membership/fleet de clusters
+
+gcloud deploy apply --file=ci-cd/aproval.yaml --region=us-central1 --project=workload-poc-20230
+gcloud deploy apply --file=ci-cd/canary.yaml --region=us-central1 --project=workload-poc-20230
+
+# rollback
+gcloud deploy targets rollback stag-target \
+    --delivery-pipeline=pipeline-app \
+    --region=us-central1 \
+    --project=workload-poc-20230
+
+(Nota: É possível automatizar essa aprovação usando uma feature chamada "Cloud Deploy Verifications", 
+onde um robô checa as métricas e avança sozinho, mas o padrão do lab é manual para você aprender!)

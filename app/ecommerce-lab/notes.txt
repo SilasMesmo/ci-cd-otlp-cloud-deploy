@@ -1,0 +1,9 @@
+roles/artifactregistry.reader
+roles/cloudtrace.agent
+roles/logging.logWriter
+
+
+# comando para abrir porta 8080 no COS
+iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+https://docs.cloud.google.com/container-optimized-os/docs/how-to/firewall?hl=pt-br
+estudar metadado user-data das vms

@@ -1,0 +1,22 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+  name: pipeline-app
+serialPipeline:
+  stages:
+  - targetId: stag-target
+    profiles: ["stag"]
+    strategy:
+      standard: {} # standard, aplica 100% diretamente
+  - targetId: prod-target
+    profiles: ["prod"]
+    strategy:
+      # standard: {} para primeiro deploy use strategy.standard
+      canary:
+        runtimeConfig:
+          kubernetes:
+            serviceNetworking:
+              service: "prod-ecomm-service"
+              deployment: "prod-app-ecomm"
+        canaryDeployment:
+          percentages: [10, 50] # 100 ele já entende, e se colocar ele da erro então para aprovar para 100 basta colocar 50

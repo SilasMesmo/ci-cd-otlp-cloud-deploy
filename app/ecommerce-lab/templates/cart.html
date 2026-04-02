@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}DevShop - Carrinho{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Seu Carrinho</h2>
+</div>
+
+<div class="glass-panel">
+    <div id="cart-container">
+        <div style="text-align: center; color: var(--text-secondary);">Carregando carrinho...</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function loadCart() {
+    try {
+        const items = await api.getCart();
+        const container = document.getElementById('cart-container');
+        
+        if (items.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2rem 0;">
+                    <h3 style="color: var(--text-secondary); margin-bottom: 1.5rem;">Seu carrinho está vazio.</h3>
+                    <a href="/products" class="btn btn-outline">Continuar Comprando</a>
+                </div>
+            `;
+            return;
+        }
+
+        let total = 0;
+        let html = `
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Preço</th>
+                        <th>Quantidade</th>
+                        <th>Subtotal</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        items.forEach(item => {
+            const subtotal = item.product.price * item.quantity;
+            total += subtotal;
+            html += `
+                <tr>
+                    <td style="font-weight: 500; font-size: 1.1rem;">${item.product.name}</td>
+                    <td>$ ${item.product.price.toFixed(2)}</td>
+                    <td>${item.quantity}</td>
+                    <td style="font-weight: 700;">$ ${subtotal.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-danger" style="padding: 0.35rem 0.85rem; font-size: 0.85rem;" onclick="removeItem(${item.id})">Remover</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        html += `
+                </tbody>
+            </table>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+                <div style="font-size: 1.5rem; font-weight: 800;">Total: <span style="color: var(--primary-color)">$ ${total.toFixed(2)}</span></div>
+                <a href="/checkout" class="btn" style="padding: 1rem 2rem; font-size: 1.1rem;">Finalizar Compra</a>
+            </div>
+        `;
+        container.innerHTML = html;
+        updateCartCount();
+
+    } catch (e) {
+        document.getElementById('cart-container').innerHTML = '<p style="color:red">Erro ao carregar o carrinho.</p>';
+    }
+}
+
+async function removeItem(id) {
+    await api.removeFromCart(id);
+    showToast('Item removido do carrinho.');
+    loadCart();
+}
+
+document.addEventListener('DOMContentLoaded', loadCart);
+</script>
+{% endblock %}

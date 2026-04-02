@@ -1,0 +1,44 @@
+# Ignorar banco de dados local
+*.db
+*.sqlite
+*.sqlite3
+
+# Ignorar ambientes virtuais locais (As dependências serão instaladas dentro do container)
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Ignorar arquivos do github (pipelines)
+.git/
+.github/
+
+# Arquivos de cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Arquivos de configuração de IDEs e editores
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Builds e empacotamento
+build/
+dist/
+*.egg-info/
+
+# configs para usar OTLP
+cloud-config.yaml
+config.yaml
